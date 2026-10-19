@@ -1,0 +1,77 @@
+/* =======================================================
+   SELAH · optimizacion.css
+   Se carga DESPUÉS de styles.css. No cambia el diseño:
+   solo corrige detalles en celular, tableta y PC.
+   ======================================================= */
+
+/* 1) Zonas seguras (iPhone con notch en horizontal) */
+.wrap,
+.chips {
+  padding-left: max(20px, env(safe-area-inset-left));
+  padding-right: max(20px, env(safe-area-inset-right));
+}
+@media (min-width: 720px) {
+  .wrap {
+    padding-left: max(24px, env(safe-area-inset-left));
+    padding-right: max(24px, env(safe-area-inset-right));
+  }
+}
+
+/* 2) Navegadores viejos sin "dvh" (iPhone con iOS < 15.4):
+      el carrito y la ficha se rompían sin esto */
+@supports not (height: 100dvh) {
+  .hero-inner { min-height: min(760px, calc(100vh - var(--hh))); }
+  .cart-panel { height: 100vh; }
+  .sheet { max-height: 92vh; }
+  .gal-track { max-height: 44vh; }
+}
+
+/* 3) Navegadores sin "aspect-ratio": que las fotos no se colapsen */
+@supports not (aspect-ratio: 1 / 1) {
+  .card-img { height: 0; padding-top: 100%; }
+  .gal-track { height: 0; padding-top: 100%; }
+}
+
+/* 4) Título principal: en tableta horizontal / PC chico,
+      "OBSESSION" se cortaba por el borde */
+.hero h1 { font-size: clamp(2.1rem, 10.4vw, 5.6rem); }
+@media (min-width: 900px) {
+  .hero h1 { font-size: clamp(2.6rem, 5.4vw, 5.6rem); }
+}
+
+/* 5) Ficha de producto en pantallas anchas pero bajitas
+      (celular en horizontal): la foto ya no se sale de la ventana */
+@media (min-width: 800px) {
+  .sheet { height: min(640px, 90vh); height: min(640px, 90dvh); }
+  .sheet-gal { align-self: stretch; min-height: 0; }
+  .gal-track { aspect-ratio: auto; height: 100%; max-height: none; }
+}
+
+/* 6) Rendimiento en celular: menos blur y menos animaciones pesadas */
+@media (max-width: 720px) {
+  .blob { filter: blur(48px); }
+  .b3 { display: none; }
+  .logo-glow { filter: blur(32px); }
+  .o1, .o2 { filter: blur(22px); }
+}
+
+/* El brillo de "cargando" se detiene cuando la foto ya cargó
+   (antes seguía animado en todas las tarjetas) */
+.card-img:has(img.ld) { animation: none; background: var(--crema-2); }
+
+/* 7) Pantallas muy chicas (iPhone SE, Android compactos) */
+@media (max-width: 360px) {
+  .btn { padding-left: 18px; padding-right: 18px; letter-spacing: 0.06em; }
+  .trust p { font-size: 0.56rem; letter-spacing: 0.05em; }
+  .wordmark { font-size: 1.35rem; }
+  .card-name { font-size: 0.86rem; }
+  .card-btn { font-size: 0.66rem; letter-spacing: 0.06em; }
+}
+
+/* 8) Pantallas muy grandes */
+@media (min-width: 1500px) {
+  :root { --w: 1240px; }
+}
+
+/* 9) Evita que se arrastren/seleccionen las fotos sin querer */
+.card-img img, .gal-track img, .logo-big { -webkit-user-drag: none; user-select: none; }
